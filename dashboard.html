@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Status Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e1e; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .dashboard { background-color: #2d2d2d; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 400px; }
+        h1 { text-align: center; color: #61dafb; }
+        .stat { margin: 15px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        .stat-label { font-weight: bold; color: #ccc; }
+        .stat-value { color: #fff; }
+        .status-running { color: #4caf50; }
+        .status-resting { color: #ffeb3b; }
+        .status-idle { color: #9e9e9e; }
+        .footer { margin-top: 20px; font-size: 0.8rem; text-align: center; color: #777; }
+        #persona-ua { font-size: 0.7rem; color: #aaa; text-align: right; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>Bot Dashboard</h1>
+        
+        <div class="stat">
+            <span class="stat-label">Status:</span>
+            <span class="stat-value" id="status">Loading...</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Uptime:</span>
+            <span class="stat-value" id="uptime">0s</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Memory Usage:</span>
+            <span class="stat-value" id="memory">0 MB</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Total Visits:</span>
+            <span class="stat-value" id="visits">0</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Current URL:</span>
+            <span class="stat-value" id="url">-</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Persona:</span>
+            <span class="stat-value" id="persona-ua">-</span>
+        </div>
+
+        <div class="footer">
+            Auto-refreshing every 2s
+        </div>
+    </div>
+
+    <script>
+        async function fetchStatus() {
+            try {
+                const response = await fetch('http://localhost:3000/status');
+                const data = await response.json();
+
+                const statusEl = document.getElementById('status');
+                statusEl.textContent = data.status.toUpperCase();
+                statusEl.className = 'stat-value status-' + data.status;
+
+                document.getElementById('uptime').textContent = data.uptime + 's';
+                document.getElementById('memory').textContent = data.memoryUsage + ' MB';
+                document.getElementById('visits').textContent = data.totalVisits;
+                document.getElementById('url').textContent = data.currentUrl || 'None';
+                
+                if (data.currentPersona) {
+                    document.getElementById('persona-ua').textContent = data.currentPersona.userAgent;
+                    document.getElementById('persona-ua').title = data.currentPersona.userAgent;
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = 'OFFLINE';
+                document.getElementById('status').className = 'stat-value status-idle';
+            }
+        }
+
+        setInterval(fetchStatus, 2000);
+        fetchStatus();
+    </script>
+</body>
+</html>
