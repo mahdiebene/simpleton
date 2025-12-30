@@ -1,7 +1,7 @@
 {
   "name": "try_again",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/bot.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/bot.js",
