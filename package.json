@@ -4,7 +4,7 @@
   "main": "dist/bot.js",
   "scripts": {
     "build": "tsc",
-    "postinstall": "npm run build",
+    "postinstall": "npm run build && npx puppeteer browsers install chrome",
     "start": "node dist/bot.js",
     "dev": "ts-node src/bot.ts"
   },
@@ -31,5 +31,8 @@
     "@types/winston": "^2.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "puppeteer": {
+    "cacheDirectory": ".cache/puppeteer"
   }
 }
