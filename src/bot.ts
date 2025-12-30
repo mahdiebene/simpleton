@@ -59,6 +59,12 @@ export class BotEngine {
     }
 
     private startServer() {
+        // Serve dashboard.html at root
+        app.get('/', (req, res) => {
+            const path = require('path');
+            res.sendFile(path.join(__dirname, '../dashboard.html'));
+        });
+
         app.get('/status', (req, res) => {
             res.json({
                 ...this.state,
