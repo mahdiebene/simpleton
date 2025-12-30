@@ -4,6 +4,7 @@
   "main": "dist/bot.js",
   "scripts": {
     "build": "tsc",
+    "postinstall": "npm run build",
     "start": "node dist/bot.js",
     "dev": "ts-node src/bot.ts"
   },
